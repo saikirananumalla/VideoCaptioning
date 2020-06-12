@@ -1,5 +1,6 @@
 # Dense Video Captioning with Bi-modal Transformer
-Do all the training and evaluation on google colab
+Do all the training and evaluation on google colab.
+
 Reference : https://v-iashin.github.io/bmt
 ## Summary
 
