@@ -90,8 +90,6 @@ Check out FeatureExtraction folder for extraction of i3d and vggish features of 
 
 ## Single Video Prediction
 
-*Disclaimer: we do not guarantee perfect results nor recommend you to use it in production. Sometimes captions are redundant, unnatural, and rediculous.*
-
 Start with feature extraction using "Feature Extraction". Extract I3D features
 ```bash
 # run this from Feature Extraction folder
