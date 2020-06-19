@@ -150,7 +150,7 @@ Note that in our research we avoided non-maximum suppression for computational e
 The sample video credits: [Women's long jump historical World record in 1978](https://www.youtube.com/watch?v=nynA-Gmh2r8)
 
 ## Citation
-Please, use this bibtex if you would like to cite our work
+Please, use this bibtex if you would like to cite this work
 ```
 @misc{BMT_Iashin_2020,
   title={A Better Use of Audio-Visual Cues: Dense Video Captioning with Bi-modal Transformer},
