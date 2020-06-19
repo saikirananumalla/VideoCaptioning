@@ -1,5 +1,4 @@
 # Dense Video Captioning with Bi-modal Transformer
-Do all the training and evaluation on google colab.
 
 Reference : https://v-iashin.github.io/bmt
 ## Summary
@@ -19,7 +18,7 @@ Then, the input features are trimmed according to the proposed segments and enco
 ## Getting Started
 Clone the repository. Mind the `--recursive` flag to make sure `submodules` are also cloned (evaluation scripts for Python 3).
 ```bash
-git clone --recursive https://github.com/saikaran.ss20/VideoCaptioning.git
+git clone --recursive https://github.com/saikaran-ss20/VideoCaptioning.git
 ```
 
 Download features (I3D and VGGish) and word embeddings (GloVe). The script will download them (~10 GB) and unpack into `./data` and `./.vector_cache` folders. *Make sure to run it while being in BMT folder*
@@ -89,11 +88,69 @@ Check out FeatureExtraction folder for extraction of i3d and vggish features of 
 |                                      BMT |            51 |   4.63 |   1.99 |  10.90 |
 
 
+## Single Video Prediction
 
-[Project Page](https://v-iashin.github.io/bmt) • [Paper](https://arxiv.org/abs/2005.08271)
+*Disclaimer: we do not guarantee perfect results nor recommend you to use it in production. Sometimes captions are redundant, unnatural, and rediculous.*
 
-This is a PyTorch implementation for the paper: A Better Use of Audio-Visual Cues: Dense Video Captioning with Bi-modal Transformer.
+Start with feature extraction using "Feature Extraction". Extract I3D features
+```bash
+# run this from Feature Extraction folder
+conda activate i3d
+python main.py \
+    --feature_type i3d \
+    --on_extraction save_numpy \
+    --device_ids 0 \
+    --extraction_fps 25 \
+    --stack_size 24 \
+    --step_size 24 \
+    --video_paths ../BMT/test/women_long_jump.mp4
+```
+
+Extract VGGish features
+```bash
+# run this from Feature Extraction folder
+conda activate vggish
+python main.py \
+    --feature_type vggish \
+    --on_extraction save_numpy \
+    --device_ids 0 \
+    --video_paths ../BMT/test/women_long_jump.mp4
+```
+
+Run the inference
+```bash
+conda activate bmt
+python ./sample/single_video_prediction.py \
+    --prop_generator_model_path best_prop_model.pt \
+    --pretrained_cap_model_path best_cap_model.pt \
+    --vggish_features_path  test/women_long_jump_vggish.npy \
+    --rgb_features_path  test/women_long_jump_rgb.npy \
+    --flow_features_path  test/women_long_jump_flow.npy \
+    --duration_in_secs 35.155 \
+    --device_id 0 \
+    --max_prop_per_vid 100 \
+    --nms_tiou_thresh 0.4
+```
+
+Expected output
+```
+[
+  {'start': 0.0, 'end': 4.9, 'sentence': 'We see the closing title screen'}, 
+  {'start': 2.7, 'end': 29.0, 'sentence': 'A woman is seen running down a track and down a track while others watch on the sides'}, 
+  {'start': 19.6, 'end': 33.3, 'sentence': 'The man runs down the track and jumps into a sand pit'}, 
+  {'start': 0.0, 'end': 13.0, 'sentence': 'A man is seen running down a track and leads into a large group of people running around a track'}, 
+  {'start': 0.9, 'end': 2.5, 'sentence': 'We see a title screen'}, 
+  {'start': 0.0, 'end': 1.6, 'sentence': 'A man is seen sitting on a table with a white words on the screen'}, 
+  {'start': 30.0, 'end': 35.2, 'sentence': 'The man runs down the track and lands on the sand'}
+]
+```
+
+Note that in our research we avoided non-maximum suppression for computational efficiency and to allow the event prediction to be dense. Feel free to play with `--nms_tiou_thresh` parameter: for example, try to make it `0.4` as in the provided example. 
+
+The sample video credits: [Women's long jump historical World record in 1978](https://www.youtube.com/watch?v=nynA-Gmh2r8)
+
 ## Citation
+Please, use this bibtex if you would like to cite our work
 ```
 @misc{BMT_Iashin_2020,
   title={A Better Use of Audio-Visual Cues: Dense Video Captioning with Bi-modal Transformer},
