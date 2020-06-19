@@ -120,7 +120,7 @@ python main.py \
 Run the inference
 ```bash
 conda activate bmt
-python ./sample/single_video_prediction.py \
+python test/single_video_prediction.py \
     --prop_generator_model_path best_prop_model.pt \
     --pretrained_cap_model_path best_cap_model.pt \
     --vggish_features_path  test/women_long_jump_vggish.npy \
